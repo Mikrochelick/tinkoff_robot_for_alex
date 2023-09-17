@@ -143,6 +143,7 @@ def main():
                                 print(f'{datetime.now()} | {name} | {figi} | {mode} | Ордер {order_id} удален, тк актив был продан.')
                         continue
                     if q != 0 and config[figi].get('late_start') == 0:
+                        print(1)
                         operations = client.operations.get_operations(account_id=account_id, figi=figi,
                                                                       state=OperationState.OPERATION_STATE_EXECUTED).operations
                         buy_operate = []
