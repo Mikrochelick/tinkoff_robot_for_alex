@@ -225,10 +225,6 @@ def main():
                                             active_sell_order = order
                                             order_id = active_sell_order.order_id
                                             delete_order = client.orders.cancel_order(account_id=account_id, order_id=order_id)
-                                    value = check_pos(client, account_id, figi)
-                                    q = cast_money(value)
-                                    if q == 0:
-                                        continue
                                     new_sell_order_n = client.orders.post_order(
                                         order_id=str(datetime.utcnow().timestamp()),
                                         figi=figi,
@@ -266,10 +262,6 @@ def main():
                                 Cv = config[figi].get('Cv')
                                 Cd = config[figi].get('Cd')
                                 if actual_price >= Cv - Cv * Cd:
-                                    value = check_pos(client, account_id, figi)
-                                    q = cast_money(value)
-                                    if q == 0:
-                                        continue
                                     Cv = Cv * Cv_plus
                                     Cn = Cn * Cn_plus
                                     config[figi].update({'Cn': Cn})
@@ -318,10 +310,6 @@ def main():
                                             active_sell_order = order
                                             order_id = active_sell_order.order_id
                                             delete_order = client.orders.cancel_order(account_id=account_id, order_id=order_id)
-                                    value = check_pos(client, account_id, figi)
-                                    q = cast_money(value)
-                                    if q == 0:
-                                        continue
                                     new_sell_order_n = client.orders.post_order(
                                         order_id=str(datetime.utcnow().timestamp()),
                                         figi=figi,
