@@ -1,3 +1,5 @@
 .idea
 token
 venv
+build
+dist
