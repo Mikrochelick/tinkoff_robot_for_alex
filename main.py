@@ -5,7 +5,7 @@ from tinkoff.invest import Client, Quotation, OrderDirection, OrderType, Operati
 import json
 
 
-TOKEN = ''
+TOKEN = 't.VDO85m1MPqVEtqVm1bZCkOEjeIlJZtPMIW1p6DzR2FLMzrp0Y990eB8hvUtrnISMAmPDEO7yvBbiLBqubitamA'
 
 
 def check_pos(client, account_id, figi):
@@ -143,7 +143,6 @@ def main():
                                 print(f'{datetime.now()} | {name} | {figi} | {mode} | Ордер {order_id} удален, тк актив был продан.')
                         continue
                     if q != 0 and config[figi].get('late_start') == 0:
-                        print(1)
                         operations = client.operations.get_operations(account_id=account_id, figi=figi,
                                                                       state=OperationState.OPERATION_STATE_EXECUTED).operations
                         buy_operate = []

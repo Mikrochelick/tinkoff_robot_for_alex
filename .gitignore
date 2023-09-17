@@ -3,3 +3,6 @@ token
 venv
 build
 dist
+main.spec
+text.txt
+test.py
