@@ -21,7 +21,7 @@ def check_pos(client, account_id, figi):
         for pos in positions:
             # print(pos)
             if pos.figi == figi:
-                return pos.quantity
+                return pos.quantity_lots
     except Exception as e:
         print(e)
         return None
@@ -38,6 +38,8 @@ def cast_money(price):
     :param price:
     :return: число типа float
     """
+    if price == None:
+        return 0
     return price.units + abs(price.nano / 1e9)  # nano - 9 нулей
 
 
@@ -94,14 +96,14 @@ def main():
             value = check_pos(client, account_id, figi)
             q = cast_money(value)
             if q == 0:
-                print(f"""
-                {name} | {figi} У вас на счете нет такого актива, его количество = {q}, наверное вы купите его позже.
-                """)
+                print(f"""{num})  Название: {name} | FIGI: {figi} |У вас на счете нет такого актива, его количество = {q}, наверное вы купите его позже.""")
+                print(
+                    f'{num})  Название: {name} | FIGI: {figi} | Cv(%): {cv} | Cn(%): {cn} | Cd(%): {cd} | Cv+(%): {cv_plus} | Cn_+(%):{cn_plus} | Режим: {mode} | Объем на счете = {value}')
                 config[figi].update({'late_start': 0})
                 continue
             else:
                 config[figi].update({'late_start': 1})
-            print(f'{num})  Название: {name} | FIGI: {figi} | Cv(%): {cv} | Cn(%): {cn} | Cd(%): {cd} | Cv+(%): {cv_plus} | Cn_+(%):{cn_plus} | Режим: {mode}')
+            print(f'{num})  Название: {name} | FIGI: {figi} | Cv(%): {cv} | Cn(%): {cn} | Cd(%): {cd} | Cv+(%): {cv_plus} | Cn_+(%):{cn_plus} | Режим: {mode} | Объем на счете = {value}')
             num += 1
             operations = client.operations.get_operations(account_id=account_id, figi=figi,
                                                           state=OperationState.OPERATION_STATE_EXECUTED).operations
@@ -120,8 +122,9 @@ def main():
             print('Сделайте исправления в config файле. Программа закроется через 4 секунды.')
             time.sleep(4)
             return
+        timing = input('Введите количество секунд задержки (5, 10...) увеличивайте в случае превышения лимитов на запросы.\nЧем больше инструментов вы торгуете, тем больше должгна быть задержка')
         while True:
-            time.sleep(15)
+            time.sleep(timing)
             try:
                 for instrument in list_dict:
                     mode = int(instrumentses[instrument].get('mode'))
@@ -166,8 +169,8 @@ def main():
                         for operate in operations:
                             if operate.operation_type == OperationType.OPERATION_TYPE_BUY:
                                 buy_operate.append(operate)
-                        Cv_plus = (1 + int(instrumentses[instrument].get('Cv_plus'))) / 100
-                        Cn_plus = (1 + int(instrumentses[instrument].get('Cn_plus'))) / 100
+                        Cv_plus = (1 + float(instrumentses[instrument].get('Cv_plus'))) / 100
+                        Cn_plus = (1 + float(instrumentses[instrument].get('Cn_plus'))) / 100
                         if mode == 1:
                             Cn = config[figi].get('Cn')
                             Cv = config[figi].get('Cv')
@@ -190,8 +193,8 @@ def main():
                                     new_sell_order_n = client.orders.post_order(
                                         order_id=str(datetime.utcnow().timestamp()),
                                         figi=figi,
-                                        price=recast_money(config[figi].get('Cn')),
-                                        quantity=value,
+                                        price=recast_money(Cn),
+                                        quantity=int(q),
                                         account_id=account_id,
                                         direction=OrderDirection.ORDER_DIRECTION_SELL,
                                         order_type=OrderType.ORDER_TYPE_LIMIT
@@ -199,8 +202,8 @@ def main():
                                     new_sell_order_v = client.orders.post_order(
                                         order_id=str(datetime.utcnow().timestamp()),
                                         figi=figi,
-                                        price=recast_money(config[figi].get('Cv')),
-                                        quantity=value,
+                                        price=recast_money(Cv),
+                                        quantity=int(q),
                                         account_id=account_id,
                                         direction=OrderDirection.ORDER_DIRECTION_SELL,
                                         order_type=OrderType.ORDER_TYPE_LIMIT
@@ -229,7 +232,7 @@ def main():
                                         order_id=str(datetime.utcnow().timestamp()),
                                         figi=figi,
                                         price=recast_money(config[figi].get('Cn')),
-                                        quantity=value,
+                                        quantity=int(q),
                                         account_id=account_id,
                                         direction=OrderDirection.ORDER_DIRECTION_SELL,
                                         order_type=OrderType.ORDER_TYPE_LIMIT
@@ -238,7 +241,7 @@ def main():
                                         order_id=str(datetime.utcnow().timestamp()),
                                         figi=figi,
                                         price=recast_money(config[figi].get('Cv')),
-                                        quantity=value,
+                                        quantity=int(q),
                                         account_id=account_id,
                                         direction=OrderDirection.ORDER_DIRECTION_SELL,
                                         order_type=OrderType.ORDER_TYPE_LIMIT
@@ -272,7 +275,7 @@ def main():
                                         order_id=str(datetime.utcnow().timestamp()),
                                         figi=figi,
                                         price=recast_money(config[figi].get('Cn')),
-                                        quantity=value,
+                                        quantity=int(q),
                                         account_id=account_id,
                                         direction=OrderDirection.ORDER_DIRECTION_SELL,
                                         order_type=OrderType.ORDER_TYPE_LIMIT
@@ -281,7 +284,7 @@ def main():
                                         order_id=str(datetime.utcnow().timestamp()),
                                         figi=figi,
                                         price=recast_money(config[figi].get('Cv')),
-                                        quantity=value,
+                                        quantity=int(q),
                                         account_id=account_id,
                                         direction=OrderDirection.ORDER_DIRECTION_SELL,
                                         order_type=OrderType.ORDER_TYPE_LIMIT
@@ -314,7 +317,7 @@ def main():
                                         order_id=str(datetime.utcnow().timestamp()),
                                         figi=figi,
                                         price=recast_money(config[figi].get('Cn')),
-                                        quantity=value,
+                                        quantity=int(q),
                                         account_id=account_id,
                                         direction=OrderDirection.ORDER_DIRECTION_SELL,
                                         order_type=OrderType.ORDER_TYPE_LIMIT
@@ -323,7 +326,7 @@ def main():
                                         order_id=str(datetime.utcnow().timestamp()),
                                         figi=figi,
                                         price=recast_money(config[figi].get('Cv')),
-                                        quantity=value,
+                                        quantity=int(q),
                                         account_id=account_id,
                                         direction=OrderDirection.ORDER_DIRECTION_SELL,
                                         order_type=OrderType.ORDER_TYPE_LIMIT
