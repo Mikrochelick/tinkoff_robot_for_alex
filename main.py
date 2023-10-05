@@ -1,11 +1,17 @@
 import time
 from datetime import datetime
-from math import modf
-from tinkoff.invest import Client, Quotation, OrderDirection, OrderType, OperationState, OperationType
+from math import modf, ceil
+from tinkoff.invest import Client, Quotation, OrderDirection, OrderType, OperationState, OperationType, InstrumentIdType
 import json
+import logging
 
 
-TOKEN = 't.VDO85m1MPqVEtqVm1bZCkOEjeIlJZtPMIW1p6DzR2FLMzrp0Y990eB8hvUtrnISMAmPDEO7yvBbiLBqubitamA'
+logging.basicConfig(level=logging.WARNING, filename = "bot_logs.log", format = "%(asctime)s - %(levelname)s - %(funcName)s: %(lineno)d - %(message)s")
+
+with open('token.txt', 'r', encoding='utf-8') as file:
+    token = file.read()
+TOKEN = token
+print(f'Ваш TOKEN: {TOKEN}')
 
 
 def check_pos(client, account_id, figi):
@@ -19,7 +25,6 @@ def check_pos(client, account_id, figi):
     try:
         positions = client.operations.get_portfolio(account_id=account_id).positions
         for pos in positions:
-            # print(pos)
             if pos.figi == figi:
                 return pos.quantity_lots
     except Exception as e:
@@ -55,7 +60,7 @@ def recast_money(price):
     :return: число типа Quotation
         """
     price = modf(price)
-    price = Quotation(units=(int(price[1])), nano=int(round(price[0], 2) * 1e9))
+    price = Quotation(units=(int(price[1])), nano=int(round(price[0], 9) * 1e9))
     return price
 
 
@@ -73,11 +78,22 @@ def read_config_file():
     return listik
 
 
+def get_precision(number):
+    str_f = str(number)
+    if '.' not in str_f:
+        listik = list(str(number))
+        k = int(listik[-1])
+        number1 = f"{number:.{k}f}"
+        print(number)
+        return k
+    # Получение строки после точки и возвращение ее длины
+    return len(str_f[str_f.index('.') + 1:])
+
+
 def main():
     print("""
 Здравствуйте Алексей, давайте проверим список инструментов и параметры которые вы указали:
     """)
-    time.sleep(3)
     with Client(TOKEN) as client:
         instrumentses = read_config_file()
         account_id = client.users.get_accounts().accounts[0].id
@@ -85,6 +101,7 @@ def main():
         list_dict = list(instrumentses)
         num = 1
         for instrument in list_dict:
+            time.sleep(0.5)
             name = config.get(instrument).get('name')
             figi = config.get(instrument).get('figi')
             cv = config.get(instrument).get('Cv')
@@ -93,17 +110,23 @@ def main():
             cv_plus = config.get(instrument).get('Cv_plus')
             cn_plus = config.get(instrument).get('Cn_plus')
             mode = config.get(instrument).get('mode')
+            min_price_increment = cast_money(client.instruments.get_instrument_by(id_type=InstrumentIdType.INSTRUMENT_ID_TYPE_FIGI, id=figi).instrument.min_price_increment)
+            config[figi].update({'min_price_increment': min_price_increment})
+            Cd = cd / 100
+            config[figi].update({'Cd': Cd})
             value = check_pos(client, account_id, figi)
             q = cast_money(value)
             if q == 0:
-                print(f"""{num})  Название: {name} | FIGI: {figi} |У вас на счете нет такого актива, его количество = {q}, наверное вы купите его позже.""")
+                logging.warning(f'Название: {name} | FIGI: {figi} | Cv(%): {cv} | Cn(%): {cn} | Cd(%): {cd} | Cv+(%): {cv_plus} | Cn_+(%):{cn_plus} | Режим: {mode} | Объем на счете = {q}')
                 print(
-                    f'{num})  Название: {name} | FIGI: {figi} | Cv(%): {cv} | Cn(%): {cn} | Cd(%): {cd} | Cv+(%): {cv_plus} | Cn_+(%):{cn_plus} | Режим: {mode} | Объем на счете = {value}')
+                    f'{num})  Название: {name} | FIGI: {figi} | Cv(%): {cv} | Cn(%): {cn} | Cd(%): {cd} | Cv+(%): {cv_plus} | Cn_+(%):{cn_plus} | Режим: {mode} | Объем на счете = {q}')
                 config[figi].update({'late_start': 0})
+                num += 1
                 continue
             else:
                 config[figi].update({'late_start': 1})
-            print(f'{num})  Название: {name} | FIGI: {figi} | Cv(%): {cv} | Cn(%): {cn} | Cd(%): {cd} | Cv+(%): {cv_plus} | Cn_+(%):{cn_plus} | Режим: {mode} | Объем на счете = {value}')
+            logging.warning(f'{num})  Название: {name} | FIGI: {figi} | Cv(%): {cv} | Cn(%): {cn} | Cd(%): {cd} | Cv+(%): {cv_plus} | Cn_+(%):{cn_plus} | Режим: {mode} | Объем на счете = {q}')
+            print(f'{num})  Название: {name} | FIGI: {figi} | Cv(%): {cv} | Cn(%): {cn} | Cd(%): {cd} | Cv+(%): {cv_plus} | Cn_+(%):{cn_plus} | Режим: {mode} | Объем на счете = {q}')
             num += 1
             operations = client.operations.get_operations(account_id=account_id, figi=figi,
                                                           state=OperationState.OPERATION_STATE_EXECUTED).operations
@@ -111,7 +134,14 @@ def main():
             for operate in operations:
                 if operate.operation_type == OperationType.OPERATION_TYPE_BUY:
                     buy_operate.append(operate)
-            buy_price = buy_operate[0].price
+            if len(buy_operate) == 0:
+                continue
+            positions = client.operations.get_portfolio(account_id=account_id)
+            for inst in positions.positions:
+                if figi == inst.figi:
+                    buy_price = inst.average_position_price
+            if cast_money(buy_price) == 0:
+                continue
             config[figi].update({'price': buy_price})
             Cv = cast_money(buy_price) * (1 + float(instrumentses[instrument].get('Cv')) / 100)
             config[figi].update({'Cv': Cv})
@@ -122,19 +152,22 @@ def main():
             print('Сделайте исправления в config файле. Программа закроется через 4 секунды.')
             time.sleep(4)
             return
-        timing = input('Введите количество секунд задержки (5, 10...) увеличивайте в случае превышения лимитов на запросы.\nЧем больше инструментов вы торгуете, тем больше должгна быть задержка')
+        timing = input('Введите количество секунд задержки (5, 10...) увеличивайте в случае превышения лимитов на запросы.\nЧем больше инструментов вы торгуете, тем больше должна быть задержка:')
         while True:
-            time.sleep(timing)
+            time.sleep(int(timing))
             try:
                 for instrument in list_dict:
+                    time.sleep(0.5)
                     mode = int(instrumentses[instrument].get('mode'))
                     figi = instrumentses[instrument].get('figi')
                     value = check_pos(client, account_id, figi)
+                    name = config[figi].get('name')
                     q = cast_money(value)
                     if q == 0 and config[figi].get('late_start') == 0:
                         continue
                     if q == 0 and config[figi].get('late_start') == 1:
                         print(f'{datetime.now()} | {name} | {figi} | {mode} | Успешно продан')
+                        logging.warning(f' | {name} | {figi} | {mode} | Успешно продан')
                         config[figi].update({'late_start': 0})
                         active_orders = client.orders.get_orders(account_id=account_id).orders
                         active_sell_order = ''
@@ -144,22 +177,24 @@ def main():
                                 order_id = active_sell_order.order_id
                                 delete_order = client.orders.cancel_order(account_id=account_id, order_id=order_id)
                                 print(f'{datetime.now()} | {name} | {figi} | {mode} | Ордер {order_id} удален, тк актив был продан.')
+                                logging.warning(f' | {name} | {figi} | {mode} | Ордер {order_id} удален, тк актив был продан.')
                         continue
                     if q != 0 and config[figi].get('late_start') == 0:
-                        operations = client.operations.get_operations(account_id=account_id, figi=figi,
-                                                                      state=OperationState.OPERATION_STATE_EXECUTED).operations
-                        buy_operate = []
-                        for operate in operations:
-                            if operate.operation_type == OperationType.OPERATION_TYPE_BUY:
-                                buy_operate.append(operate)
-                        buy_price = buy_operate[0].price
+                        positions = client.operations.get_portfolio(account_id=account_id)
+                        for inst in positions.positions:
+                            if figi == inst.figi:
+                                buy_price = inst.average_position_price
+                        if cast_money(buy_price) == 0:
+                            continue
                         config[figi].update({'price': buy_price})
                         Cv = cast_money(buy_price) * (1 + float(instrumentses[instrument].get('Cv')) / 100)
                         config[figi].update({'Cv': Cv})
                         Cn = cast_money(buy_price) * (1 + float(instrumentses[instrument].get('Cn')) / 100)
                         config[figi].update({'Cn': Cn})
                         config[figi].update({'late_start': 1})
-                        print(f'{datetime.now()} | {name} | {figi} | {mode} | Была сделана покупка. Покупка по цене {cast_money(buy_price)}, объем {q}')
+                        name = config[figi].get('name')
+                        print(f'{datetime.now()} | {name} | {figi} | {mode} | Была сделана покупка. Покупка по цене = {cast_money(buy_price)}, объем = {q}')
+                        logging.warning(f' | {name} | {figi} | {mode} | Была сделана покупка. Покупка по цене = {cast_money(buy_price)}, объем = {q}')
                     else:
                         operations = client.operations.get_operations(
                             account_id=account_id,
@@ -169,12 +204,21 @@ def main():
                         for operate in operations:
                             if operate.operation_type == OperationType.OPERATION_TYPE_BUY:
                                 buy_operate.append(operate)
-                        Cv_plus = (1 + float(instrumentses[instrument].get('Cv_plus'))) / 100
-                        Cn_plus = (1 + float(instrumentses[instrument].get('Cn_plus'))) / 100
+                        if len(buy_operate) == 0:
+                            print('нет ордера на покупку, ваша покупка не прошла полностью')
+                            logging.warning('нет ордера на покупку, ваша покупка не прошла полностью')
+                            continue
+                        Cv_plus = (1 + float(instrumentses[instrument].get('Cv_plus')) / 100)
+                        Cn_plus = (1 + float(instrumentses[instrument].get('Cn_plus')) / 100)
                         if mode == 1:
                             Cn = config[figi].get('Cn')
+                            Cn = ceil(Cn / config[figi].get('min_price_increment')) * config[figi].get(
+                                'min_price_increment')
                             Cv = config[figi].get('Cv')
+                            Cv = ceil(Cv / config[figi].get('min_price_increment')) * config[figi].get(
+                                'min_price_increment')
                             Cd = config[figi].get('Cd')
+                            print(Cd)
                             actual_price = client.market_data.get_last_prices(figi=[figi]).last_prices[0].price
                             actual_price = cast_money(actual_price)
                             if actual_price > Cn:
@@ -199,17 +243,9 @@ def main():
                                         direction=OrderDirection.ORDER_DIRECTION_SELL,
                                         order_type=OrderType.ORDER_TYPE_LIMIT
                                     )
-                                    new_sell_order_v = client.orders.post_order(
-                                        order_id=str(datetime.utcnow().timestamp()),
-                                        figi=figi,
-                                        price=recast_money(Cv),
-                                        quantity=int(q),
-                                        account_id=account_id,
-                                        direction=OrderDirection.ORDER_DIRECTION_SELL,
-                                        order_type=OrderType.ORDER_TYPE_LIMIT
-                                    )
                                     print(
-                                        f'{datetime.now()} | {name} | {figi} | {mode} | Выставлено два ордера. Cn = {Cn} | Cv = {Cv}')
+                                        f'{datetime.now()} | {name} | {figi} | {mode} | Выставлен ордер по нижней границе. Cn = {Cn} | Cv = {Cv}')
+                                    logging.warning(f' | {name} | {figi} | {mode} | Выставлен ордер по нижней границе. Cn = {Cn} | Cv = {Cv}')
                                 actual_price = client.market_data.get_last_prices(figi=[figi]).last_prices[0].price
                                 actual_price = cast_money(actual_price)
                                 if actual_price >= Cv - Cv * Cd:
@@ -218,8 +254,12 @@ def main():
                                     if q == 0:
                                         continue
                                     Cn = config[figi].get('Cn') * Cn_plus
+                                    Cn = ceil(Cn / config[figi].get('min_price_increment')) * config[figi].get(
+                                            'min_price_increment')
                                     config[figi].update({'Cn': Cn})
                                     Cv = config[figi].get('Cv') * Cv_plus
+                                    Cv = ceil(Cv / config[figi].get('min_price_increment')) * config[figi].get(
+                                            'min_price_increment')
                                     config[figi].update({'Cv': Cv})
                                     active_orders = client.orders.get_orders(account_id=account_id).orders
                                     active_sell_order = ''
@@ -228,26 +268,21 @@ def main():
                                             active_sell_order = order
                                             order_id = active_sell_order.order_id
                                             delete_order = client.orders.cancel_order(account_id=account_id, order_id=order_id)
+                                            time.sleep(10)
                                     new_sell_order_n = client.orders.post_order(
                                         order_id=str(datetime.utcnow().timestamp()),
                                         figi=figi,
-                                        price=recast_money(config[figi].get('Cn')),
-                                        quantity=int(q),
-                                        account_id=account_id,
-                                        direction=OrderDirection.ORDER_DIRECTION_SELL,
-                                        order_type=OrderType.ORDER_TYPE_LIMIT
-                                    )
-                                    new_sell_order_v = client.orders.post_order(
-                                        order_id=str(datetime.utcnow().timestamp()),
-                                        figi=figi,
-                                        price=recast_money(config[figi].get('Cv')),
+                                        price=recast_money(Cn),
                                         quantity=int(q),
                                         account_id=account_id,
                                         direction=OrderDirection.ORDER_DIRECTION_SELL,
                                         order_type=OrderType.ORDER_TYPE_LIMIT
                                     )
                                     print(
-                                        f'{datetime.now()} | {name} | {figi} | {mode} | Повышение корридора на 1% | Актуальная цена = {actual_price} | Cn = {Cn} | Cv = {Cv}')
+                                        f'{datetime.now()} | {name} | {figi} | {mode} | Повышение корридора на {config[figi].get("Cn_plus")}% | Актуальная цена = {actual_price} | Cn = {Cn} | Cv = {Cv}')
+                                    logging.warning(f' | {name} | {figi} | {mode} | Повышение корридора на {config[figi].get("Cn_plus")}% | Актуальная цена = {actual_price} | Cn = {Cn} | Cv = {Cv}')
+                                    continue
+
                             else:
                                 continue
                         if mode == 2:
@@ -256,56 +291,68 @@ def main():
                             if q == 0:
                                 continue
                             count = config[figi].get('count')
-                            actual_price = client.market_data.get_last_prices(figi=[figi]).last_prices[0].price
-                            actual_price = cast_money(actual_price)
                             if count == 0:
-                                actual_price = client.market_data.get_last_prices(figi=[figi]).last_prices[0].price
-                                actual_price = cast_money(actual_price)
                                 Cn = config[figi].get('Cn')
                                 Cv = config[figi].get('Cv')
                                 Cd = config[figi].get('Cd')
+                                print(Cd)
+                                actual_price = client.market_data.get_last_prices(figi=[figi]).last_prices[0].price
+                                actual_price = cast_money(actual_price)
+                                u = Cv - Cv * Cd
                                 if actual_price >= Cv - Cv * Cd:
+                                    print(f'303 count={count} actual_price={actual_price}, u={u}, Cv={Cv}, Cv*Cd={Cv*Cd}')
                                     Cv = Cv * Cv_plus
                                     Cn = Cn * Cn_plus
+                                    Cv = ceil(Cv / config[figi].get('min_price_increment')) * config[figi].get('min_price_increment')
+                                    Cn = ceil(Cn / config[figi].get('min_price_increment')) * config[figi].get('min_price_increment')
+                                    print(f'308 actual_price={actual_price}, Cv={Cv}, Cn={Cn}, recastCn={recast_money(Cn)}')
                                     config[figi].update({'Cn': Cn})
                                     config[figi].update({'Cv': Cv})
                                     count = count + 1
                                     config[figi].update({'count': count})
+                                    active_orders = client.orders.get_orders(account_id=account_id).orders
+                                    active_sell_order = ''
+                                    for order in active_orders:
+                                        if order.figi == figi and order.direction == OrderDirection.ORDER_DIRECTION_SELL:
+                                            active_sell_order = order
+                                            order_id = active_sell_order.order_id
+                                            delete_order = client.orders.cancel_order(account_id=account_id,
+                                                                                      order_id=order_id)
                                     new_sell_order_n = client.orders.post_order(
                                         order_id=str(datetime.utcnow().timestamp()),
                                         figi=figi,
-                                        price=recast_money(config[figi].get('Cn')),
-                                        quantity=int(q),
-                                        account_id=account_id,
-                                        direction=OrderDirection.ORDER_DIRECTION_SELL,
-                                        order_type=OrderType.ORDER_TYPE_LIMIT
-                                    )
-                                    new_sell_order_v = client.orders.post_order(
-                                        order_id=str(datetime.utcnow().timestamp()),
-                                        figi=figi,
-                                        price=recast_money(config[figi].get('Cv')),
+                                        price= recast_money(Cn),
                                         quantity=int(q),
                                         account_id=account_id,
                                         direction=OrderDirection.ORDER_DIRECTION_SELL,
                                         order_type=OrderType.ORDER_TYPE_LIMIT
                                     )
                                     print(
-                                        f'{datetime.now()} | {name} | {figi} | {mode} | Повышение корридора на 1% | Актуальная цена = {actual_price} | Cn = {Cn} | Cv = {Cv}')
+                                        f'{datetime.now()} | {name} | {figi} | {mode} | Выставлен первый ордер | Повышение корридора на {config[figi].get("Cn_plus")}% | Актуальная цена = {actual_price} | Cn = {Cn} | Cv = {Cv}')
+                                    logging.warning(f' | {name} | {figi} | {mode} | Повышение корридора на {config[figi].get("Cn_plus")}% | Актуальная цена = {actual_price} | Cn = {Cn} | Cv = {Cv}')
+                                    continue
+                                else:
+                                    continue
                             if count == 1:
-                                actual_price = client.market_data.get_last_prices(figi=[figi]).last_prices[0].price
-                                actual_price = cast_money(actual_price)
                                 Cn = config[figi].get('Cn')
                                 Cv = config[figi].get('Cv')
                                 Cd = config[figi].get('Cd')
-                                if actual_price > Cv - Cv * Cd:
+                                actual_price = client.market_data.get_last_prices(figi=[figi]).last_prices[0].price
+                                actual_price = cast_money(actual_price)
+                                u = Cv - Cv * Cd
+                                if actual_price >= Cv - Cv * Cd:
+                                    print(f' 343 count={count} actual_price={actual_price}, u={u}, Cv={Cv}, Cv*Cd={Cv * Cd}')
                                     value = check_pos(client, account_id, figi)
                                     q = cast_money(value)
                                     if q == 0:
                                         continue
                                     Cn = Cn * Cn_plus
+                                    Cn = ceil(Cn / config[figi].get('min_price_increment')) * config[figi].get('min_price_increment')
                                     config[figi].update({'Cn': Cn})
                                     Cv = Cv * Cv_plus
+                                    Cv = ceil(Cv / config[figi].get('min_price_increment')) * config[figi].get('min_price_increment')
                                     config[figi].update({'Cv': Cv})
+                                    print(f'354 count={count} actual_price={actual_price}, Cv={Cv}, Cn={Cn}, recastCn={recast_money(Cn)}')
                                     active_orders = client.orders.get_orders(account_id=account_id).orders
                                     active_sell_order = ''
                                     for order in active_orders:
@@ -316,27 +363,24 @@ def main():
                                     new_sell_order_n = client.orders.post_order(
                                         order_id=str(datetime.utcnow().timestamp()),
                                         figi=figi,
-                                        price=recast_money(config[figi].get('Cn')),
-                                        quantity=int(q),
-                                        account_id=account_id,
-                                        direction=OrderDirection.ORDER_DIRECTION_SELL,
-                                        order_type=OrderType.ORDER_TYPE_LIMIT
-                                    )
-                                    new_sell_order_v = client.orders.post_order(
-                                        order_id=str(datetime.utcnow().timestamp()),
-                                        figi=figi,
-                                        price=recast_money(config[figi].get('Cv')),
+                                        price= recast_money(Cn),
                                         quantity=int(q),
                                         account_id=account_id,
                                         direction=OrderDirection.ORDER_DIRECTION_SELL,
                                         order_type=OrderType.ORDER_TYPE_LIMIT
                                     )
                                     print(
-                                        f'{datetime.now()} | {name} | {figi} | {mode} | Повышение корридора на 1% | Актуальная цена = {actual_price} | Cn = {Cn} | Cv = {Cv}')
+                                        f'{datetime.now()} | {name} | {figi} | {mode} | Повышение корридора на {config[figi].get("Cn_plus")}% | Актуальная цена = {actual_price} | Cn = {Cn} | Cv = {Cv}')
+                                    logging.warning(f' | {name} | {figi} | {mode} | Повышение корридора на {config[figi].get("Cn_plus")}% | Актуальная цена = {actual_price} | Cn = {Cn} | Cv = {Cv}')
+                                    continue
+                                else:
+                                    continue
+                        else:
+                            continue
             except Exception as e:
                 print(e)
-                time.sleep(30)
-                break
+                logging.warning(f' | {name} | {figi} | {mode} | {e} ')
+                continue
 
 
 if __name__ == '__main__':
