@@ -1,1 +1,8 @@
-{"name":"Допустим это акция газпрома","figi": "BBG009GSYN76","Cv": 2,"Cn": 1,"Cd": 0.1,"Cv_plus": 0.2,"Cn_plus": 0.2, "mode": 1, "count": 0}
+{"name":"O'Key Group SA","figi": "BBG00172J7S9","Cv": 0.38,"Cn": 0.16,"Cd": 0.1,"Cv_plus": 0.1,"Cn_plus": 0.1, "mode": 2, "count": 0, "Cmax": 400, "Nmax": 5, "Kmax": 1, "Qmin": 30000, "Lmax": 1, "G": 1, "count_buy": 5}
+{"name":"Аптечная сеть 36,6","figi": "BBG000K3STR7","Cv": 0.38,"Cn": 0.16,"Cd": 0.1,"Cv_plus": 0.1,"Cn_plus": 0.1, "mode": 2, "count": 0, "Cmax": 400, "Nmax": 5, "Kmax": 1, "Qmin": 30000, "Lmax": 1, "G": 1, "count_buy": 1}
+{"name":"Etalon Group PLC ГДР","figi": "BBG001M2SC01","Cv": 0.38,"Cn": 0.16,"Cd": 0.1,"Cv_plus": 0.1,"Cn_plus": 0.1, "mode": 2, "count": 0, "Cmax": 400, "Nmax": 10, "Kmax": 1, "Qmin": 30000, "Lmax": 1, "G": 1, "count_buy": 2}
+{"name":"Fix Price Group","figi": "BBG00ZHCX1X2","Cv": 0.38,"Cn": 0.16,"Cd": 0.1,"Cv_plus": 0.1,"Cn_plus": 0.1, "mode": 2, "count": 0, "Cmax": 400, "Nmax": 5, "Kmax": 1, "Qmin": 30000, "Lmax": 1, "G": 1, "count_buy": 5}
+{"name":"ОВК","figi": "BBG008HD3V85","Cv": 0.38,"Cn": 0.16,"Cd": 0.1,"Cv_plus": 0.1,"Cn_plus": 0.1, "mode": 2, "count": 0, "Cmax": 400, "Nmax": 15, "Kmax": 1, "Qmin": 30000, "Lmax": 100, "G": 2, "count_buy": 0}
+{"name":"СПБ Биржа","figi": "BBG002GHV6L9","Cv": 0.38,"Cn": 0.16,"Cd": 0.1,"Cv_plus": 0.1,"Cn_plus": 0.1, "mode": 2, "count": 0, "Cmax": 400, "Nmax": 5, "Kmax": 1, "Qmin": 30000, "Lmax": 1, "G": 1, "count_buy": 3}
+{"name":"РуссНефть","figi": "BBG00F9XX7H4","Cv": 0.38,"Cn": 0.16,"Cd": 0.1,"Cv_plus": 0.1,"Cn_plus": 0.1, "mode": 2, "count": 0, "Cmax": 400, "Nmax": 5, "Kmax": 1, "Qmin": 30000, "Lmax": 1, "G": 1, "count_buy": 1}
+{"name":"М.видео","figi": "BBG004S68CP5","Cv": 0.38,"Cn": 0.16,"Cd": 0.1,"Cv_plus": 0.1,"Cn_plus": 0.1, "mode": 2, "count": 0, "Cmax": 400, "Nmax": 5, "Kmax": 1, "Qmin": 30000, "Lmax": 1, "G": 1, "count_buy": 1}

@@ -1,0 +1,141 @@
+FIGI: BBG000BN56Q9 | ticker: DSKY | name: Детский Мир
+FIGI: BBG000RMWQD4 | ticker: ENPG | name: En+ Group
+FIGI: BBG004PYF2N3 | ticker: POLY | name: Polymetal
+FIGI: BBG000GQSVC2 | ticker: NKNCP | name: Нижнекамскнефтехим - акции привилегированные
+FIGI: BBG000FWGSZ5 | ticker: IRKT | name: Яковлев
+FIGI: BBG000PKWCQ7 | ticker: MRKV | name: МРСК Волги
+FIGI: BBG004S68CV8 | ticker: VSMO | name: ВСМПО-АВИСМА
+FIGI: BBG000Q7ZZY2 | ticker: UNAC | name: Объединенная авиастроительная корпорация
+FIGI: BBG004S68C39 | ticker: LSRG | name: Группа ЛСР
+FIGI: BBG000RJL816 | ticker: TTLK | name: Таттелеком
+FIGI: BBG000BBV4M5 | ticker: CNTL | name: Центральный Телеграф
+FIGI: BBG004RVFCY3 | ticker: MGNT | name: Магнит
+FIGI: BBG004S68JR8 | ticker: SVAV | name: СОЛЛЕРС
+FIGI: BBG002GHV6L9 | ticker: SPBE | name: СПБ Биржа
+FIGI: BBG001M2SC01 | ticker: ETLN | name: Etalon Group PLC ГДР
+FIGI: BBG004S685M3 | ticker: RTKMP | name: Ростелеком - Привилегированные акции
+FIGI: BBG011MCM288 | ticker: GEMC | name: United medical group
+FIGI: BBG0029SG1C1 | ticker: KZOSP | name: ПАО «КАЗАНЬОРГСИНТЕЗ» - акции привилегированные
+FIGI: TCS00A105EX7 | ticker: WUSH | name: Whoosh
+FIGI: BBG000LNHHJ9 | ticker: KMAZ | name: КАМАЗ
+FIGI: BBG0029SFXB3 | ticker: KZOS | name: ПАО «КАЗАНЬОРГСИНТЕЗ»
+FIGI: BBG00ZHCX1X2 | ticker: FIXP | name: Fix Price Group
+FIGI: BBG00178PGX3 | ticker: VKCO | name: VK
+FIGI: BBG004S689R0 | ticker: PHOR | name: ФосАгро
+FIGI: TCS2207L1061 | ticker: HHRU | name: HeadHunter Group PLC
+FIGI: BBG000SK7JS5 | ticker: LNZL | name: Лензолото
+FIGI: BBG000PZ0833 | ticker: MGTSP | name: МГТС - акции привилегированные
+FIGI: BBG000F6YPH8 | ticker: ELFV | name: ЭЛ5-Энерго
+FIGI: BBG002458LF8 | ticker: SELG | name: Селигдар
+FIGI: BBG007N0Z367 | ticker: AGRO | name: РусАгро
+FIGI: BBG004S68829 | ticker: TATNP | name: Татнефть - привилегированные акции
+FIGI: BBG00R4Z2NT4 | ticker: VEON-RX | name: VEON
+FIGI: BBG000VQWH86 | ticker: BLNG | name: Белон
+FIGI: TCS00A0JNXF9 | ticker: PRFN | name: ЧЗПСН
+FIGI: BBG004S68507 | ticker: MAGN | name: Магнитогорский металлургический комбинат
+FIGI: BBG004730ZJ9 | ticker: VTBR | name: Банк ВТБ
+FIGI: BBG00F6NKQX3 | ticker: SMLT | name: ГК Самолет
+FIGI: BBG004S68758 | ticker: BANE | name: Башнефть
+FIGI: BBG004S683W7 | ticker: AFLT | name: Аэрофлот
+FIGI: BBG012YQ6P43 | ticker: CIAN | name: Циан АДР
+FIGI: TCS00A105NV2 | ticker: CARM | name: КарМани
+FIGI: BBG008F2T3T2 | ticker: RUAL | name: РУСАЛ
+FIGI: BBG00BGKYH17 | ticker: NKHP | name: НКХП
+FIGI: BBG004730N88 | ticker: SBER | name: Сбер Банк
+FIGI: TCS00A105BN4 | ticker: GECO | name: Генетико
+FIGI: BBG00Y3XYV94 | ticker: MDMG | name: Мать и дитя
+FIGI: BBG00HY6V6H5 | ticker: GTRK | name: ГТМ
+FIGI: BBG004S68CP5 | ticker: MVID | name: М.видео
+FIGI: BBG004S686N0 | ticker: BANEP | name: Башнефть - привилегированные акции
+FIGI: BBG00172J7S9 | ticker: OKEY | name: O'Key Group SA
+FIGI: BBG004S68B31 | ticker: ALRS | name: АЛРОСА
+FIGI: BBG000VG1034 | ticker: MRKP | name: Россети Центр и Приволжье
+FIGI: BBG000R04X57 | ticker: FLOT | name: Совкомфлот
+FIGI: BBG000MZL2S9 | ticker: PMSBP | name: Пермэнергосбыт - акции привилегированные
+FIGI: BBG004RVFFC0 | ticker: TATN | name: Татнефть
+FIGI: BBG00JXPFBN0 | ticker: FIVE | name: X5 RetailGroup ГДР
+FIGI: BBG004S68DD6 | ticker: MSTT | name: Мостотрест
+FIGI: BBG004S68598 | ticker: MTLR | name: Мечел
+FIGI: TCS10A0JNAB6 | ticker: ABIO | name: Артген
+FIGI: BBG008HD3V85 | ticker: UWGN | name: ОВК
+FIGI: BBG004S688G4 | ticker: AKRN | name: Акрон
+FIGI: BBG004730RP0 | ticker: GAZP | name: Газпром
+FIGI: BBG000V07CB8 | ticker: DVEC | name: ДЭК
+FIGI: BBG0047315Y7 | ticker: SBERP | name: Сбер Банк - привилегированные акции
+FIGI: BBG004S682Z6 | ticker: RTKM | name: Ростелеком
+FIGI: BBG0063FKTD9 | ticker: LENT | name: Лента
+FIGI: BBG0019K04R5 | ticker: LIFE | name: Фармсинтез
+FIGI: BBG000QJW156 | ticker: BSPB | name: Банк Санкт-Петербург
+FIGI: BBG004S681W1 | ticker: MTSS | name: МТС
+FIGI: BBG000RG4ZQ4 | ticker: TGKN | name: ТГК-14
+FIGI: BBG00475KHX6 | ticker: TRNFP | name: Транснефть - привилегированные акции
+FIGI: BBG000LWNRP3 | ticker: RKKE | name: РКК Энергия им.С.П.Королева
+FIGI: BBG000NLC9Z6 | ticker: LSNG | name: Ленэнерго
+FIGI: BBG00QKJSX05 | ticker: RENI | name: Ренессанс Страхование
+FIGI: BBG000VH7TZ8 | ticker: MRKC | name: Россети Центр
+FIGI: TCS00A103X66 | ticker: POSI | name: Positive Technologies
+FIGI: BBG00475JZZ6 | ticker: FEES | name: ФСК Россети
+FIGI: BBG000NLB2G3 | ticker: KROT | name: Красный Октябрь
+FIGI: BBG002B9MYC1 | ticker: KAZT | name: КуйбышевАзот
+FIGI: BBG0014PFYM2 | ticker: RUGR | name: Русгрэйн
+FIGI: BBG000MZL0Y6 | ticker: PMSB | name: Пермэнергосбыт
+FIGI: BBG004S684M6 | ticker: SIBN | name: Газпром нефть
+FIGI: BBG002B298N6 | ticker: YAKG | name: ЯТЭК
+FIGI: BBG000Q7GG57 | ticker: TGKB | name: ТГК-2
+FIGI: BBG000DBD6F6 | ticker: KLSB | name: Калужская сбытовая компания
+FIGI: BBG000RP8V70 | ticker: CHMK | name: ЧМК
+FIGI: BBG00F9XX7H4 | ticker: RNFT | name: РуссНефть
+FIGI: BBG004S687G6 | ticker: MSRS | name: Россети Московский регион
+FIGI: BBG000TJ6F42 | ticker: MRKZ | name: Россети Северо-Запад
+FIGI: BBG000K3STR7 | ticker: APTK | name: Аптечная сеть 36,6
+FIGI: BBG005D1WCQ1 | ticker: QIWI | name: QIWI
+FIGI: BBG004S68473 | ticker: IRAO | name: Интер РАО ЕЭС
+FIGI: BBG00475K2X9 | ticker: HYDR | name: РусГидро
+FIGI: BBG002BCQK67 | ticker: NSVZ | name: Наука-Связь
+FIGI: BBG004S681B4 | ticker: NLMK | name: НЛМК
+FIGI: BBG000TY1CD1 | ticker: BELU | name: Белуга ао
+FIGI: BBG000RTHVK7 | ticker: GCHE | name: Группа Черкизово
+FIGI: BBG000SR0YS4 | ticker: LNZLP | name: Лензолото - привилегированные акции
+FIGI: BBG00QPYJ5H0 | ticker: TCSG | name: TCS Group
+FIGI: BBG004S681M2 | ticker: SNGSP | name: Сургутнефтегаз - привилегированные акции
+FIGI: BBG006L8G4H1 | ticker: YNDX | name: Яндекс
+FIGI: BBG003LYCMB1 | ticker: SFIN | name: ЭсЭфАй
+FIGI: BBG000QF1Q17 | ticker: FESH | name: ДВМП
+FIGI: BBG004S68696 | ticker: RASP | name: Распадская
+FIGI: BBG00475KKY8 | ticker: NVTK | name: НОВАТЭК
+FIGI: BBG002YFXL29 | ticker: UNKL | name: ЮУНК
+FIGI: BBG000GQSRR5 | ticker: NKNC | name: Нижнекамскнефтехим
+FIGI: BBG000W325F7 | ticker: AQUA | name: ИНАРКТИКА
+FIGI: BBG000BX7DH0 | ticker: VRSB | name: ТНС энерго Воронеж
+FIGI: BBG0100R9963 | ticker: SGZH | name: Сегежа
+FIGI: BBG000NLCCM3 | ticker: LSNGP | name: Ленэнерго - акции привилегированные
+FIGI: BBG004731489 | ticker: GMKN | name: Норильский никель
+FIGI: BBG004730JJ5 | ticker: MOEX | name: Московская Биржа
+FIGI: BBG004S686W0 | ticker: UPRO | name: Юнипро
+FIGI: BBG000VJMH65 | ticker: MRKS | name: МРСК Сибири
+FIGI: BBG004Z2RGW8 | ticker: ROLO | name: Русолово
+FIGI: BBG004S687W8 | ticker: MSNG | name: Мосэнерго
+FIGI: BBG004S68614 | ticker: AFKS | name: АФК Система
+FIGI: BBG0136BTL03 | ticker: SFTL | name: Noventiq ГДР
+FIGI: BBG000R607Y3 | ticker: PLZL | name: Полюс
+FIGI: BBG00Y91R9T3 | ticker: OZON | name: Ozon Holdings PLC
+FIGI: BBG004731032 | ticker: LKOH | name: ЛУКОЙЛ
+FIGI: BBG000RK52V1 | ticker: OGKB | name: Вторая генерирующая компания оптового рынка электроэнергии
+FIGI: BBG000VFX6Y4 | ticker: GLTR | name: Globaltrans Investment PLC
+FIGI: BBG002B9T6Y1 | ticker: KAZTP | name: КуйбышевАзот - Акции привилегированные
+FIGI: BBG004S68BR5 | ticker: NMTP | name: НМТП
+FIGI: BBG000QFH687 | ticker: TGKA | name: ТГК-1
+FIGI: BBG0047315D0 | ticker: SNGS | name: Сургутнефтегаз
+FIGI: BBG009GSYN76 | ticker: CBOM | name: МКБ
+FIGI: BBG000RJWGC4 | ticker: AMEZ | name: Ашинский метзавод
+FIGI: BBG000Q7GJ60 | ticker: TGKBP | name: ТГК-2 - акции привилегированные
+FIGI: BBG002W2FT69 | ticker: ABRD | name: АбрауДюрсо
+FIGI: BBG0027F0Y27 | ticker: CNTLP | name: Центральный Телеграф - акции привилегированные
+FIGI: BBG004S68BH6 | ticker: PIKK | name: ПИК
+FIGI: BBG004731354 | ticker: ROSN | name: Роснефть
+FIGI: BBG004S68FR6 | ticker: MTLRP | name: Мечел - Привилегированные акции
+FIGI: BBG004TC84Z8 | ticker: TRMK | name: Трубная Металлургическая Компания
+FIGI: BBG000VKG4R5 | ticker: MRKU | name: МРСК Урала
+FIGI: BBG000C7P5M7 | ticker: MRKY | name: МРСК Юга
+FIGI: BBG002B2J5X0 | ticker: KRKNP | name: Саратовский НПЗ - акции привилегированные
+FIGI: BBG00475K6C3 | ticker: CHMF | name: Северсталь
